@@ -1,0 +1,91 @@
+# ==========================
+# Web Framework
+# ==========================
+fastapi
+uvicorn[standard]
+
+# ==========================
+# Environment Variables
+# ==========================
+python-dotenv
+
+# ==========================
+# Data Validation
+# ==========================
+pydantic
+pydantic-settings
+
+# ==========================
+# AI / LLM
+# ==========================
+langchain
+langchain-core
+langchain-community
+
+# ==========================
+# Ollama
+# ==========================
+langchain-ollama
+ollama
+
+# ==========================
+# Embeddings
+# ==========================
+sentence-transformers
+transformers
+torch
+
+# ==========================
+# Vector Database
+# ==========================
+chromadb
+
+# ==========================
+# Retrieval
+# ==========================
+rank-bm25
+faiss-cpu
+
+# ==========================
+# Re-ranking
+# ==========================
+FlagEmbedding
+
+# ==========================
+# Database
+# ==========================
+sqlalchemy
+psycopg2-binary
+
+# ==========================
+# HTTP Client
+# ==========================
+httpx
+
+# ==========================
+# Data Processing
+# ==========================
+numpy
+pandas
+
+# ==========================
+# Tokenization
+# ==========================
+tiktoken
+
+# ==========================
+# Logging & Utilities
+# ==========================
+loguru
+tqdm
+
+# ==========================
+# Testing
+# ==========================
+pytest
+pytest-asyncio
+
+# ==========================
+# Multipart Uploads
+# ==========================
+python-multipart
