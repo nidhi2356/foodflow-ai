@@ -1,0 +1,142 @@
+[
+  {
+    "restaurant_id": "r001",
+    "restaurant_name": "Punjabi Rasoi",
+    "location": "Connaught Place, Delhi",
+    "cuisine": ["North Indian", "Punjabi"],
+    "rating": 4.5,
+    "price_range": "₹₹",
+    "menu": [
+      {
+        "item_id": "m001",
+        "name": "Paneer Tikka",
+        "description": "Grilled Indian cottage cheese marinated with yogurt and aromatic spices.",
+        "category": "Starter",
+        "price": 280,
+        "is_veg": true,
+        "spice_level": "Medium",
+        "dietary_tags": ["Vegetarian", "High Protein"]
+      },
+      {
+        "item_id": "m002",
+        "name": "Butter Chicken",
+        "description": "Tender chicken cooked in a creamy tomato and butter gravy.",
+        "category": "Main Course",
+        "price": 420,
+        "is_veg": false,
+        "spice_level": "Medium",
+        "dietary_tags": ["High Protein"]
+      },
+      {
+        "item_id": "m003",
+        "name": "Garlic Naan",
+        "description": "Soft Indian flatbread topped with garlic and coriander.",
+        "category": "Bread",
+        "price": 90,
+        "is_veg": true,
+        "spice_level": "Mild",
+        "dietary_tags": ["Vegetarian"]
+      }
+    ]
+  },
+  {
+    "restaurant_id": "r002",
+    "restaurant_name": "Green Bowl",
+    "location": "Saket, Delhi",
+    "cuisine": ["Healthy", "Continental"],
+    "rating": 4.6,
+    "price_range": "₹₹",
+    "menu": [
+      {
+        "item_id": "m004",
+        "name": "Grilled Paneer Protein Bowl",
+        "description": "Grilled paneer served with quinoa, vegetables, lettuce and a yogurt dressing.",
+        "category": "Healthy Bowl",
+        "price": 350,
+        "is_veg": true,
+        "spice_level": "Mild",
+        "dietary_tags": ["Vegetarian", "High Protein", "Healthy"]
+      },
+      {
+        "item_id": "m005",
+        "name": "Chicken Quinoa Bowl",
+        "description": "Grilled chicken with quinoa, fresh vegetables and a light herb dressing.",
+        "category": "Healthy Bowl",
+        "price": 420,
+        "is_veg": false,
+        "spice_level": "Mild",
+        "dietary_tags": ["High Protein", "Healthy"]
+      }
+    ]
+  },
+  {
+    "restaurant_id": "r003",
+    "restaurant_name": "Pizza Craft",
+    "location": "Hauz Khas, Delhi",
+    "cuisine": ["Italian", "Pizza"],
+    "rating": 4.4,
+    "price_range": "₹₹",
+    "menu": [
+      {
+        "item_id": "m006",
+        "name": "Loaded Cheese Pizza",
+        "description": "Crispy crust pizza loaded with mozzarella, cheddar and extra cheese.",
+        "category": "Pizza",
+        "price": 399,
+        "is_veg": true,
+        "spice_level": "Mild",
+        "dietary_tags": ["Vegetarian", "Cheesy"]
+      },
+      {
+        "item_id": "m007",
+        "name": "Spicy Chicken Pizza",
+        "description": "Pizza topped with spicy chicken, jalapenos, mozzarella and chili flakes.",
+        "category": "Pizza",
+        "price": 450,
+        "is_veg": false,
+        "spice_level": "Hot",
+        "dietary_tags": ["High Protein", "Spicy"]
+      },
+      {
+        "item_id": "m008",
+        "name": "Garlic Bread",
+        "description": "Toasted bread with garlic butter, herbs and mozzarella cheese.",
+        "category": "Side",
+        "price": 180,
+        "is_veg": true,
+        "spice_level": "Mild",
+        "dietary_tags": ["Vegetarian", "Cheesy"]
+      }
+    ]
+  },
+  {
+    "restaurant_id": "r004",
+    "restaurant_name": "South Spice",
+    "location": "Lajpat Nagar, Delhi",
+    "cuisine": ["South Indian"],
+    "rating": 4.3,
+    "price_range": "₹",
+    "menu": [
+      {
+        "item_id": "m009",
+        "name": "Masala Dosa",
+        "description": "Crispy fermented rice and lentil crepe filled with spiced potato masala.",
+        "category": "Breakfast",
+        "price": 150,
+        "is_veg": true,
+        "spice_level": "Medium",
+        "dietary_tags": ["Vegetarian", "Breakfast"]
+      },
+      {
+        "item_id": "m010",
+        "name": "Idli Sambar",
+        "description": "Soft steamed rice cakes served with lentil sambar and coconut chutney.",
+        "category": "Breakfast",
+        "price": 120,
+        "is_veg": true,
+        "spice_level": "Mild",
+        "dietary_tags": ["Vegetarian", "Breakfast"]
+      }
+    ]
+  }
+]
