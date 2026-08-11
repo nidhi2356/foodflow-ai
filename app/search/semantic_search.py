@@ -2,7 +2,10 @@ from app.embeddings.service import EmbeddingService
 from app.logger.logger import logger
 from app.models.query import FoodQuery
 from app.query.understanding import QueryUnderstandingService
-from app.vector_store.chroma_service import ChromaService
+from app.reranking.service import RerankerService
+from app.ranking.service import RankingService
+from app.retrieval.retrieval_service import RetrievalService
+
 
 class SemanticSearchService:
 
@@ -10,7 +13,11 @@ class SemanticSearchService:
 
         self.embedding_service = EmbeddingService()
 
-        self.chroma_service = ChromaService()
+        self.retrieval_service = RetrievalService()
+
+        self.reranker_service = RerankerService()
+
+        self.ranking_service = RankingService()
 
         self.query_understanding_service = (
             QueryUnderstandingService()
@@ -30,6 +37,10 @@ class SemanticSearchService:
             f"Performing semantic search for: {query}"
         )
 
+        # =================================
+        # 1. Query Understanding
+        # =================================
+
         food_query: FoodQuery = (
             self.query_understanding_service.understand(
                 query
@@ -40,21 +51,76 @@ class SemanticSearchService:
             f"Parsed query: {food_query.model_dump()}"
         )
 
+        # =================================
+        # 2. Generate Semantic Embedding
+        # =================================
+
         query_embedding = (
             self.embedding_service.generate_embedding(
                 food_query.semantic_query
             )
         )
 
-        where = self._build_filters(food_query)
+        # =================================
+        # 3. Build Hard Filters
+        # =================================
 
-        results = self.chroma_service.search(
-            query_embedding=query_embedding,
-            top_k=top_k,
-            where=where
+        where = self._build_filters(
+            food_query
         )
 
-        return results
+        # =================================
+        # 4. Hybrid Retrieval
+        # =================================
+
+        # Retrieve more candidates than final result count
+        candidate_k = max(
+            top_k * 2,
+            10
+        )
+
+        candidates = (
+            self.retrieval_service.retrieve(
+                query_embedding=query_embedding,
+                query=query,
+                food_query=food_query,
+                top_k=candidate_k,
+                where=where
+            )
+        )
+
+        logger.info(
+            f"Hybrid retrieval returned "
+            f"{len(candidates)} candidates"
+        )
+
+        # =================================
+        # 5. Cross-Encoder Reranking
+        # =================================
+
+        reranked_results = (
+            self.reranker_service.rerank(
+                query,
+                candidates
+            )
+        )
+
+        # =================================
+        # 6. Metadata + Cross-Encoder Ranking
+        # =================================
+
+        ranked_results = (
+            self.ranking_service.rank(
+                food_query,
+                reranked_results
+            )
+        )
+
+        # =================================
+        # 7. Return Final Results
+        # =================================
+
+        return ranked_results[:top_k]
 
     def _build_filters(
         self,
@@ -63,11 +129,19 @@ class SemanticSearchService:
 
         filters = []
 
+        # ---------------------------------
+        # Vegetarian
+        # ---------------------------------
+
         if food_query.is_veg is not None:
 
             filters.append({
                 "is_veg": food_query.is_veg
             })
+
+        # ---------------------------------
+        # Maximum Price
+        # ---------------------------------
 
         if food_query.max_price is not None:
 
@@ -77,6 +151,10 @@ class SemanticSearchService:
                 }
             })
 
+        # ---------------------------------
+        # Minimum Rating
+        # ---------------------------------
+
         if food_query.min_rating is not None:
 
             filters.append({
@@ -85,25 +163,37 @@ class SemanticSearchService:
                 }
             })
 
+        # ---------------------------------
+        # No Filters
+        # ---------------------------------
+
         if len(filters) == 0:
 
             return None
+
+        # ---------------------------------
+        # Single Filter
+        # ---------------------------------
 
         if len(filters) == 1:
 
             return filters[0]
 
+        # ---------------------------------
+        # Multiple Filters
+        # ---------------------------------
+
         return {
             "$and": filters
         }
+
 
 if __name__ == "__main__":
 
     service = SemanticSearchService()
 
     query = (
-        "healthy high protein vegetarian "
-        "dinner under ₹400"
+        "paneer tikka"
     )
 
     results = service.search(
@@ -111,12 +201,36 @@ if __name__ == "__main__":
         top_k=5
     )
 
-    print("\nSearch Results:\n")
+    print("\nFinal Ranked Results:\n")
 
-    for i, document in enumerate(
-        results["documents"][0]
-    ):
+    for i, result in enumerate(results):
+
+        print("\n" + "=" * 60)
 
         print(
-            f"{i + 1}. {document}"
+            f"Rank: {i + 1}"
+        )
+
+        print(
+            f"Food: "
+            f"{result['metadata']['item_name']}"
+        )
+
+        print(
+            f"Cross-Encoder Score: "
+            f"{result['cross_encoder_score']:.4f}"
+        )
+
+        print(
+            f"Metadata Score: "
+            f"{result['metadata_score']:.4f}"
+        )
+
+        print(
+            f"Final Score: "
+            f"{result['final_score']:.4f}"
+        )
+
+        print(
+            result["text"]
         )

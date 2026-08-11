@@ -1,5 +1,4 @@
 import chromadb
-from langchain_core import documents, embeddings
 
 from app.config.settings import settings
 from app.logger.logger import logger
