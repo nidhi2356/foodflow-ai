@@ -1,25 +1,24 @@
 from fastapi import FastAPI
 
-from app.config.settings import settings
-from app.logger.logger import logger
-from app.api.chat import router as chat_router
+from app.api.routes import router
 
-
-logger.info("Starting FlowFood AI")
 
 app = FastAPI(
-    title = settings.app_name,
-    version= settings.app_version
+    title="FoodFlow AI",
+    description=(
+        "AI-powered food search and recommendation service"
+    ),
+    version="1.0.0"
 )
 
-app.include_router(chat_router)
 
-@app.get("/")
-def home():
-    logger.info("Home endpoint called")
+app.include_router(router)
+
+
+@app.get("/health")
+def health_check():
 
     return {
-        "message": "Welcome to FoodFlow AI ",
-        "version": settings.app_version,
-        "environment": settings.environment
+        "status": "healthy",
+        "service": "foodflow-ai"
     }
