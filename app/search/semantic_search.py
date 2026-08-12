@@ -5,6 +5,7 @@ from app.query.understanding import QueryUnderstandingService
 from app.reranking.service import RerankerService
 from app.ranking.service import RankingService
 from app.retrieval.retrieval_service import RetrievalService
+from app.recommendation.service import RecommendationService
 
 
 class SemanticSearchService:
@@ -18,6 +19,10 @@ class SemanticSearchService:
         self.reranker_service = RerankerService()
 
         self.ranking_service = RankingService()
+
+        self.recommendation_service = (
+            RecommendationService()
+        )
 
         self.query_understanding_service = (
             QueryUnderstandingService()
@@ -37,9 +42,7 @@ class SemanticSearchService:
             f"Performing semantic search for: {query}"
         )
 
-        # =================================
         # 1. Query Understanding
-        # =================================
 
         food_query: FoodQuery = (
             self.query_understanding_service.understand(
@@ -51,9 +54,8 @@ class SemanticSearchService:
             f"Parsed query: {food_query.model_dump()}"
         )
 
-        # =================================
         # 2. Generate Semantic Embedding
-        # =================================
+        
 
         query_embedding = (
             self.embedding_service.generate_embedding(
@@ -118,9 +120,20 @@ class SemanticSearchService:
 
         # =================================
         # 7. Return Final Results
-        # =================================
 
-        return ranked_results[:top_k]
+        final_results =  ranked_results[:top_k]
+
+        recommendation = (
+            self.recommendation_service.generate_recommendation(
+                query,
+                final_results
+            )
+        )
+
+        return{
+            "results" : final_results,
+            "recommendation" : recommendation
+        }
 
     def _build_filters(
         self,
@@ -193,17 +206,20 @@ if __name__ == "__main__":
     service = SemanticSearchService()
 
     query = (
-        "paneer tikka"
+        "healthy high protein vegetarian "
+        "dinner under ₹400"
     )
 
-    results = service.search(
+    response = service.search(
         query,
         top_k=5
     )
 
     print("\nFinal Ranked Results:\n")
 
-    for i, result in enumerate(results):
+    for i, result in enumerate(
+        response["results"]
+    ):
 
         print("\n" + "=" * 60)
 
@@ -234,3 +250,11 @@ if __name__ == "__main__":
         print(
             result["text"]
         )
+
+    print("\n" + "=" * 60)
+
+    print("\nAI Recommendation:\n")
+
+    print(
+        response["recommendation"]
+    )
