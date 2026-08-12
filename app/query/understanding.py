@@ -173,11 +173,18 @@ User query:
             prompt
         )
 
-        parsed_response = json.loads(response)
-        food_query = FoodQuery(**parsed_response)
+        try:
+
+            parsed_response = json.loads(response)
+            food_query = FoodQuery(**parsed_response)
+
+        except (ValueError,TypeError) as e:
+
+            logger.error(f"Invalid LLM query response: {e}")
+            logger.error(f"Raw response: {response}")
+            raise ValueError("Unable to understand the food query") from e
 
         food_query = self._validate_query(query,food_query)
-
         return food_query
 
     def _validate_query(

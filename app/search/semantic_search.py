@@ -90,6 +90,12 @@ class SemanticSearchService:
                 where=where
             )
         )
+        if not candidates:
+            logger.info("No food results found")
+            return {
+                "results": [],
+                "recommendation": ("Sorry, I couldn't find any food items matching your requirements.")
+            }
 
         logger.info(
             f"Hybrid retrieval returned "
@@ -107,9 +113,7 @@ class SemanticSearchService:
             )
         )
 
-        # =================================
         # 6. Metadata + Cross-Encoder Ranking
-        # =================================
 
         ranked_results = (
             self.ranking_service.rank(
@@ -118,17 +122,26 @@ class SemanticSearchService:
             )
         )
 
-        # =================================
         # 7. Return Final Results
 
         final_results =  ranked_results[:top_k]
 
-        recommendation = (
-            self.recommendation_service.generate_recommendation(
-                query,
-                final_results
+        try:
+            recommendation = (
+                self.recommendation_service.generate_recommendation(
+                    query,
+                    final_results
+                )
             )
-        )
+        except RuntimeError as e:
+
+            logger.error(
+                f"Recommendation generation failed: {e}"
+            )
+
+            recommendation = (
+                "I found some matching food options, but I'm unable to generate a recommendation right now."
+            )
 
         return{
             "results" : final_results,
@@ -142,20 +155,14 @@ class SemanticSearchService:
 
         filters = []
 
-        # ---------------------------------
         # Vegetarian
-        # ---------------------------------
-
         if food_query.is_veg is not None:
 
             filters.append({
                 "is_veg": food_query.is_veg
             })
 
-        # ---------------------------------
         # Maximum Price
-        # ---------------------------------
-
         if food_query.max_price is not None:
 
             filters.append({
@@ -164,10 +171,7 @@ class SemanticSearchService:
                 }
             })
 
-        # ---------------------------------
         # Minimum Rating
-        # ---------------------------------
-
         if food_query.min_rating is not None:
 
             filters.append({
@@ -176,25 +180,16 @@ class SemanticSearchService:
                 }
             })
 
-        # ---------------------------------
         # No Filters
-        # ---------------------------------
-
         if len(filters) == 0:
-
             return None
 
-        # ---------------------------------
         # Single Filter
-        # ---------------------------------
 
         if len(filters) == 1:
-
             return filters[0]
 
-        # ---------------------------------
         # Multiple Filters
-        # ---------------------------------
 
         return {
             "$and": filters
@@ -206,8 +201,7 @@ if __name__ == "__main__":
     service = SemanticSearchService()
 
     query = (
-        "healthy high protein vegetarian "
-        "dinner under ₹400"
+        "vegan sushi under ₹50"
     )
 
     response = service.search(
