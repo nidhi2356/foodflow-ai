@@ -5,31 +5,13 @@ fastapi
 uvicorn[standard]
 
 # ==========================
-# Environment Variables
-# ==========================
-python-dotenv
-
-# ==========================
-# Data Validation
+# Data Validation & Settings
 # ==========================
 pydantic
 pydantic-settings
 
 # ==========================
-# AI / LLM
-# ==========================
-langchain
-langchain-core
-langchain-community
-
-# ==========================
-# Ollama
-# ==========================
-langchain-ollama
-ollama
-
-# ==========================
-# Embeddings
+# Embeddings & Re-ranking
 # ==========================
 sentence-transformers
 transformers
@@ -44,48 +26,19 @@ chromadb
 # Retrieval
 # ==========================
 rank-bm25
-faiss-cpu
 
 # ==========================
-# Re-ranking
+# LLM - Hugging Face
 # ==========================
-FlagEmbedding
+huggingface-hub
 
 # ==========================
-# Database
-# ==========================
-sqlalchemy
-psycopg2-binary
-
-# ==========================
-# HTTP Client
-# ==========================
-httpx
-
-# ==========================
-# Data Processing
+# Utilities
 # ==========================
 numpy
-pandas
-
-# ==========================
-# Tokenization
-# ==========================
-tiktoken
-
-# ==========================
-# Logging & Utilities
-# ==========================
 loguru
-tqdm
 
 # ==========================
 # Testing
 # ==========================
 pytest
-pytest-asyncio
-
-# ==========================
-# Multipart Uploads
-# ==========================
-python-multipart
